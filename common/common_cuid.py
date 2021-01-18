@@ -100,7 +100,7 @@ def delete(data):
             jsonnumber = re.findall(r"\d+\.?\d*", jstr)
             for key in jsonnumber:
                 try:
-                    sql = "delete from "+"[LIMS].[dbo].["+tableName+"] where ID = "+str(key)
+                    sql = "delete from "+"[DB_HM].[dbo].["+tableName+"] where ID = "+str(key)
                     db_session.execute(sql)
                     aud = AuditTrace()
                     aud.TableName = tableName
@@ -206,23 +206,23 @@ def select(data):
                             params = params + " AND " + key + " = '" + data[key] + "'"
         if pages == "":
             if params == "":
-                sql = "select " + columns + " from [LIMS].[dbo].[" + tableName + "] ORDER BY ID DESC"
-                sqlcount = "select count(ID) from [LIMS].[dbo].[" + tableName + "]"
+                sql = "select " + columns + " from [DB_HM].[dbo].[" + tableName + "] ORDER BY ID DESC"
+                sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "]"
             else:
                 sql = "select " + columns + " from [LIMS].[dbo].[" + tableName + "] where " + params + " ORDER BY ID DESC"
-                sqlcount = "select count(ID) from [LIMS].[dbo].[" + tableName + "] where " + params
+                sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "] where " + params
         else:
             if params == "":
                 sql = "select top " + str(
-                    rowsnumber) + " " + columns + " from [LIMS].[dbo].[" + tableName + "] where ID not in (select top " + str(
-                    (pages - 1) * rowsnumber) + " ID FROM [LIMS].[dbo].[" + tableName + "] ORDER BY ID DESC) ORDER BY ID DESC"
-                sqlcount = "select count(ID) from [LIMS].[dbo].[" + tableName + "]"
+                    rowsnumber) + " " + columns + " from [DB_HM].[dbo].[" + tableName + "] where ID not in (select top " + str(
+                    (pages - 1) * rowsnumber) + " ID FROM [DB_HM].[dbo].[" + tableName + "] ORDER BY ID DESC) ORDER BY ID DESC"
+                sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "]"
             else:
                 sql = "select top " + str(
-                    rowsnumber) + " " + columns + " from [LIMS].[dbo].[" + tableName + "] where " + params + \
+                    rowsnumber) + " " + columns + " from [DB_HM].[dbo].[" + tableName + "] where " + params + \
                       "AND ID not in (select top " + str(
-                    (pages - 1) * rowsnumber) + " ID FROM [LIMS].[dbo].[" + tableName + "] where " + params +" ORDER BY ID DESC) ORDER BY ID DESC"
-                sqlcount = "select count(ID) from [LIMS].[dbo].[" + tableName + "] where " + params
+                    (pages - 1) * rowsnumber) + " ID FROM [DB_HM].[dbo].[" + tableName + "] where " + params +" ORDER BY ID DESC) ORDER BY ID DESC"
+                sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "] where " + params
         re = db_session.execute(sql).fetchall()
         recount = db_session.execute(sqlcount).fetchall()
         dict_list = []
