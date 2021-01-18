@@ -209,7 +209,7 @@ def select(data):
                 sql = "select " + columns + " from [DB_HM].[dbo].[" + tableName + "] ORDER BY ID DESC"
                 sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "]"
             else:
-                sql = "select " + columns + " from [LIMS].[dbo].[" + tableName + "] where " + params + " ORDER BY ID DESC"
+                sql = "select " + columns + " from [DB_HM].[dbo].[" + tableName + "] where " + params + " ORDER BY ID DESC"
                 sqlcount = "select count(ID) from [DB_HM].[dbo].[" + tableName + "] where " + params
         else:
             if params == "":
