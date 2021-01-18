@@ -6,26 +6,31 @@
         <el-step title="数据统计"></el-step>
         <el-step title="订单分批"></el-step>
       </el-steps>
+      <el-row>
+        <el-col :span="24">
+          <div class="marginBottom floatRight">
+            <el-button type="primary" size="small" v-show="steps != 0" @click="lastStep">上一步</el-button>
+            <el-button type="primary" size="small" v-show="steps != 2" @click="nextStep">下一步</el-button>
+            <el-button type="primary" size="small" v-show="steps == 2" @click="getPlanManagerAllTableData">去调度</el-button>
+          </div>
+        </el-col>
+      </el-row>
       <el-row :gutter="15" v-show="steps == 0">
         <el-col :span="24">
-          <el-collapse class="marginBottom">
-            <el-collapse-item title="多条件查询订单">
-              <el-form :model="planTableData.searchField" :inline="true" class="marginTop" label-width="110px">
-                <el-form-item label="状态">
-                   <el-select v-model="planTableData.searchField.PlanStatus" placeholder="请选择">
-                    <el-option v-for="item in optionsPlanStatus" :key="item.value" :label="item.value" :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="创建/同步时间">
-                   <el-date-picker v-model="planTableData.searchField.CreateTimeTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" size="small" @click="getPlanTableData">查询</el-button>
-                </el-form-item>
-              </el-form>
-            </el-collapse-item>
-          </el-collapse>
+          <el-form :model="planTableData.searchField" :inline="true" class="marginTop">
+            <el-form-item label="状态">
+               <el-select v-model="planTableData.searchField.PlanStatus" placeholder="请选择">
+                <el-option v-for="item in optionsPlanStatus" :key="item.value" :label="item.value" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="创建/同步时间">
+               <el-date-picker v-model="planTableData.searchField.CreateTimeTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" size="small" @click="getPlanTableData">查询</el-button>
+            </el-form-item>
+          </el-form>
           <div class="platformContainer">
             <el-form :inline="true">
               <el-form-item v-for="(item,index) in planTableData.handleType" :key="index" v-has="['订单管理']">
@@ -52,6 +57,7 @@
               <el-form :model="planTableData.formField" label-width="110px">
                 <el-form-item label="编号">
                   <el-input v-model="planTableData.formField.PlanNum"></el-input>
+                  生成的订单编号规则：上一个订单的英文字母+日期+数量
                 </el-form-item>
                 <el-form-item label="品名">
                   <el-select v-model="planTableData.formField.BrandCode" placeholder="请选择" @change="change">
@@ -139,10 +145,16 @@
           <div class="platformContainer">
             <el-row>
               <el-col :span="24">
-                <p class="marginBottom">共选择<span>{{ selectPlanList.length }}</span>类品种，需生成批数<span>{{ selectPlanBatchTotal }}</span>批</p>
+                <p class="marginBottom">共选择<span>{{ selectPlanList.length }}</span>类品种，生成批数<span>{{ selectPlanBatchTotal }}</span>批</p>
+                <p class="marginBottom" v-for="(item,index) in selectPlanList" :key="index">
+                  <span class="color-success text-center text-size-18">{{ item.PlanQuantityTotal }}</span>
+                  <span class="text-center text-size-16">{{ item.unit }}</span>
+                  <span class="color-darkblue text-center text-size-18">{{ item.BrandName }}</span> 分
+                  <span class="color-lightgreen text-size-18">{{ item.BatchNum }}</span> 批
+                </p>
               </el-col>
             </el-row>
-            <el-button type="primary" size="small" @click="planschedul" v-has="['计划分批']">生成批计划</el-button>
+            <el-button type="primary" size="small" @click="planschedul" v-if="isAdd" v-has="['计划分批']">生成批计划</el-button>
           </div>
           <div class="platformContainer" style="min-height: 550px;">
             <el-form :inline="true">
@@ -150,13 +162,18 @@
                 <el-button :type="item.type" size="small" @click="handleFormPlanManager(item.label)">{{ item.label }}</el-button>
               </el-form-item>
               <el-form-item class="floatRight">
-                <el-button type="primary" size="small" icon='el-icon-refresh-right' @click="getPlanManagerTableData">刷新</el-button>
+                <el-button type="primary" size="small" icon='el-icon-refresh-right' @click="getPlanManagerTableData()">刷新</el-button>
               </el-form-item>
             </el-form>
-            <el-table :data="PlanManagerTableData.data" border size="small">
+            <el-table :data="PlanManagerTableData.data" @cell-click="cellClick" border size="small">
               <el-table-column prop="PlanNum" label="计划单号"></el-table-column>
               <el-table-column prop="Seq" label="顺序号"></el-table-column>
-              <el-table-column prop="BatchID" label="批次号"></el-table-column>
+              <el-table-column prop="BatchID" label="批次号">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.BatchID" v-if="showEditRow == scope.row && showEdit" @blur="loseFcous(scope.$index, scope.row)"></el-input>
+                  <span v-else>{{ scope.row.BatchID }}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="SchedulePlanCode" label="调度编号"></el-table-column>
               <el-table-column prop="BrandCode" label="品名编码"></el-table-column>
               <el-table-column prop="BrandName" label="品名"></el-table-column>
@@ -177,10 +194,9 @@
                   <b class="" v-else>{{ scope.row.PlanStatus }}</b>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" fixed="right" width="150" v-has="['计划分批']">
+              <el-table-column label="操作" fixed="right" width="80" v-has="['计划分批']">
                 <template slot-scope="scope">
-                  <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" v-if="scope.row.PlanStatus === '待审核' || scope.row.PlanStatus === '审核未通过'">编辑</el-button>
-                  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.PlanStatus === '待审核' || scope.row.PlanStatus === '审核未通过'">删除</el-button>
+                  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" v-if="scope.row.PlanStatus === '待审核' || scope.row.PlanStatus === '审核未通过' || scope.row.PlanStatus === '撤回'">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -216,11 +232,6 @@
           </div>
         </el-col>
       </el-row>
-      <el-col :span="24" style="text-align: right;">
-        <el-button type="primary" v-show="steps != 0" @click="lastStep">上一步</el-button>
-        <el-button type="primary" v-show="steps != 2" @click="nextStep">下一步</el-button>
-        <el-button type="primary" v-show="steps == 2" @click="$router.push('/planningScheduling')">去调度</el-button>
-      </el-col>
     </el-col>
   </el-row>
 </template>
@@ -257,13 +268,14 @@
             Description:""
           },
           searchField:{
-            PlanStatus:"",
-            CreateTimeTime:"",
+            PlanStatus:"待分批",
+            CreateTimeTime:moment().format("YYYY-MM-DD"),
           }
         },
         selectPlanList:[],
         unSelectPlanList:[],
         selectPlanBatchTotal:0,
+        isAdd:true, //是否可生成批计划
         PlanManagerTableData:{
           data:[],
           limit:10,
@@ -282,6 +294,9 @@
             BrandName:"",
           },
         },
+        emptyBatchIDNum:0,
+        showEditRow: {},
+        showEdit:false
       }
     },
     mounted(){
@@ -372,10 +387,32 @@
       handleRowClick(row){
         this.$refs.multipleTable.toggleRowSelection(row)
       },
+      getBH(){
+        var that = this
+        var params = {
+        }
+        this.axios.get("/api/selectordernum",{
+          params: params
+        }).then(res => {
+          if(res.data.code === "200"){
+            that.planTableData.formField.PlanNum = res.data.data.PlanNum
+            that.$message({
+              type: 'success',
+              message: "已自动分配订单编号"
+            });
+          }else{
+            that.$message({
+              type: 'info',
+              message: res.data.message
+            });
+          }
+        })
+      },
       handleForm(label){
         if(label === "添加"){
           this.planTableData.dialogVisible = true
           this.planTableData.dialogTitle = label
+          this.getBH()
         }else if(label === "删除"){
           var params = {tableName:"product_plan"}
           var mulId = []
@@ -506,6 +543,47 @@
           }
         })
       },
+      getPlanManagerAllTableData(){
+        var that = this
+        var PlanNums = []
+        this.selectPlanList.forEach(item =>{
+          PlanNums.push(item.PlanNum)
+        })
+        var params = {
+          PlanNums:JSON.stringify(PlanNums),
+          limit:10000,
+          offset:0,
+        }
+        this.axios.get("/api/selectplanmanager",{
+          params: params
+        }).then(res => {
+          if(res.data.code === "200"){
+            var emptyNum = []
+            res.data.data.rows.forEach(item =>{
+              if(item.BatchID === ""){
+                emptyNum.push(item.PlanNum)
+              }
+            })
+            if(emptyNum.length == 0){
+              that.$router.push('/planningScheduling')
+            }else{
+              that.$confirm('当前订单还有'+emptyNum.length+'条批计划的批次号为空，是否现在去审核？', '提示', {
+                distinguishCancelAndClose:true,
+                type: 'warning'
+              }).then(()  => {
+                that.$router.push('/planningScheduling')
+              }).catch(() => {
+
+              });
+            }
+          }else{
+            that.$message({
+              type: 'info',
+              message: res.data.message
+            });
+          }
+        })
+      },
       handlePlanManagerSizeChange(limit){
         this.PlanManagerTableData.limit = limit
         this.getPlanManagerTableData()
@@ -528,16 +606,44 @@
           }
         })
       },
-      handleEdit(index, row){
-        this.PlanManagerTableData.dialogVisible = true
-        this.PlanManagerTableData.dialogTitle = "编辑"
-        this.PlanManagerTableData.handleRow = row
-        this.PlanManagerTableData.formField = {
-          BatchID:row.BatchID,
-          PlanNum:row.PlanNum,
-          BrandName:row.BrandName,
-          BrandCode:row.BrandCode
+      cellClick(row,column){
+        if(row.PlanStatus === '待审核' || row.PlanStatus === '审核未通过' || row.PlanStatus === '撤回'){
+          this.showEditRow = row
+          this.showEdit = true
+        }else{
+          this.$message({
+            type: 'info',
+            message: "当前批计划不可修改"
+          });
         }
+      },
+      loseFcous(index,row){
+        this.showEditRow = row
+        this.showEdit = false
+        var params = {
+          ID:row.ID,
+          BatchID:row.BatchID,
+          PlanStatus:"待审核",
+        }
+        this.axios.get("/api/makePlan",{
+          params:params
+        }).then(res =>{
+          if(res.data.code === "200"){
+            this.$message({
+              type: 'success',
+              message: res.data.message
+            });
+            this.PlanManagerTableData.dialogVisible = false
+            this.getPlanManagerTableData()
+          }else{
+            this.$message({
+              type: 'info',
+              message: res.data.message
+            });
+          }
+        },res =>{
+          console.log("请求错误")
+        })
       },
       handleDelete(index, row) {
         var params = {tableName:"PlanManager"}
@@ -591,31 +697,6 @@
           },res =>{
             console.log("请求错误")
           })
-        }else if(this.PlanManagerTableData.dialogTitle === "编辑"){
-          var params = {
-            ID:this.PlanManagerTableData.handleRow.ID,
-            BatchID:this.PlanManagerTableData.formField.BatchID,
-            PlanStatus:"待审核",
-          }
-          this.axios.get("/api/makePlan",{
-            params:params
-          }).then(res =>{
-            if(res.data.code === "200"){
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              });
-              this.PlanManagerTableData.dialogVisible = false
-              this.getPlanManagerTableData()
-            }else{
-              this.$message({
-                type: 'info',
-                message: res.data.message
-              });
-            }
-          },res =>{
-            console.log("请求错误")
-          })
         }
       },
       planschedul(){
@@ -640,6 +721,7 @@
                   type: 'success',
                   message: res.data.message
                 });
+                this.isAdd = false
                 this.getPlanManagerTableData()
               }else{
                 that.$message({

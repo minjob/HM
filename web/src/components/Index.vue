@@ -23,6 +23,11 @@
             </el-tooltip>
           </li>
           <li>
+            <el-tooltip class="head-menu-item" effect="dark" content="大数据看板" placement="bottom">
+              <i class="el-icon-monitor" @click="$router.push('/ProductionMonitoring')"></i>
+            </el-tooltip>
+          </li>
+          <li>
             <el-tooltip class="head-menu-item" effect="dark" content="切换系统" placement="bottom">
               <i class="el-icon-menu" @click="showSystemNav = !showSystemNav"></i>
             </el-tooltip>
@@ -85,9 +90,9 @@
             <el-row :gutter="30">
               <el-col :span="24">
                 <el-col :span="6" v-for="(item,index) in systemOptions" :key="index">
-                  <div class="platformContainer cursor-pointer" style="text-align: center;" v-bind:class="{'color-lightgreen':index===systemActive}" @click="selectSystem(index,item.label)">
-                    <p class="marginBottom text-size-48"><i :class="item.icon"></i></p>
-                    <p class="text-size-16">{{ item.label }}</p>
+                  <div class="platformContainer cursor-pointer" style="text-align: center;" @click="selectSystem(index,item.label)">
+                    <p class="marginBottom text-size-48" v-bind:class="{'color-lightgreen':index===systemActive}"><i :class="item.icon"></i></p>
+                    <p class="text-size-16" v-bind:class="{'color-lightgreen':index===systemActive}">{{ item.label }}</p>
                   </div>
                 </el-col>
               </el-col>
@@ -129,24 +134,23 @@
             {title:'发送投料计划',icon:"el-icon-position",url:"/sendPlan"},
           ]},
           {label: '生产数据管理',icon:"el-icon-tickets",mainMenu:[
-            {title:"生产监控",icon:"el-icon-view",url:"/ProductionMonitoring"},
-            {title:"批生产记录",icon:"el-icon-edit-outline",url:"/ElectronicBatchRecord"},
-            {title:"批物料平衡统计",icon:"el-icon-box",url:"/MaterialBalanceStatistics"},
-            {title:"生产数据趋势分析",icon:"el-icon-box",url:"/TrendQuery"},
-            {title:"批记录管理",icon:"el-icon-folder-opened",url:"/BatchRecordFiles"},
+            {title:"电子批生产记录",icon:"el-icon-edit-outline",url:"/ElectronicBatchRecord"},
+            {title:"批物料平衡统计",icon:"fa fa-balance-scale",url:"/MaterialBalanceStatistics"},
+            // {title:"生产数据趋势分析",icon:"fa fa-bar-chart",url:"/TrendQuery"},
+            {title:"批记录维护管理",icon:"el-icon-folder-opened",url:"/BatchRecordFiles"},
           ]},
-          {label: '质量管理',icon:"el-icon-data-analysis",mainMenu:[
-            {title:"IPQC",icon:"el-icon-box",url:""},
-            {title:"OQC",icon:"el-icon-box",url:""},
-            {title:"动静态",icon:"el-icon-box",url:""},
-          ]},
-          {label: '报表平台',icon:"fa fa-table",mainMenu:[
-            {title:"产量报表",icon:"el-icon-box",url:""},
-            {title:"品质报表",icon:"el-icon-box",url:""},
-            {title:"效率报表",icon:"el-icon-box",url:""},
-            {title:"OEE报表",icon:"el-icon-box",url:""},
-            {title:"出货报表",icon:"el-icon-box",url:""},
-          ]},
+          // {label: '质量管理',icon:"el-icon-data-analysis",mainMenu:[
+          //   {title:"IPQC",icon:"el-icon-box",url:""},
+          //   {title:"OQC",icon:"el-icon-box",url:""},
+          //   {title:"动静态",icon:"el-icon-box",url:""},
+          // ]},
+          // {label: '报表平台',icon:"fa fa-table",mainMenu:[
+          //   {title:"产量报表",icon:"el-icon-box",url:""},
+          //   {title:"品质报表",icon:"el-icon-box",url:""},
+          //   {title:"效率报表",icon:"el-icon-box",url:""},
+          //   {title:"OEE报表",icon:"el-icon-box",url:""},
+          //   {title:"出货报表",icon:"el-icon-box",url:""},
+          // ]},
           {label: '生产建模',icon:"el-icon-s-management",mainMenu:[
             {title:"产品定义",icon:"fa fa-list-ul",url:"/ProductDefinition"},
             {title:"工艺段定义",icon:"fa fa-list-alt",url:"/ProcessSectionDefinition"},

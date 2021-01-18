@@ -31,12 +31,10 @@
                       <b class="" v-else>{{ scope.row.PlanStatus }}</b>
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" fixed="right" width='100'>
+                  <el-table-column label="操作" fixed="right" width='170'>
                     <template slot-scope="scope">
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        @click="chPlan(scope.$index, scope.row)" v-has="['计划下发']">撤回</el-button>
+                      <el-button size="mini" type="success" @click="distributeSinBatch(scope.$index, scope.row)" v-has="['计划下发']">下发</el-button>
+                      <el-button size="mini" type="danger" @click="chPlan(scope.$index, scope.row)" v-has="['计划下发']">撤回</el-button>
                     </template>
                   </el-table-column>
               </el-table>
@@ -84,6 +82,10 @@
                   </el-pagination>
             </div>
         </el-col>
+        <el-col :span='24' class="marginBottom" style="textAlign:right;">
+          <el-button type="primary" v-show="sonstep != 0" @click="sonLastStep">上一步</el-button>
+          <el-button type="primary" v-show="sonstep != 2" @click="sonNextStep">下一步</el-button>
+        </el-col>
        </el-row>
 </template>
 <script>
@@ -113,7 +115,42 @@ export default {
         this.getSelectedEq()
         this.getYxfBatch()
     },
+    props:['sonNext','sonLast','sonstep'],
     methods: {
+      distributeSinBatch(index,row){
+        var datalist = [row.ID]
+        var params={
+          PlanStatus:'待执行',
+          IDs:JSON.stringify(datalist)
+        }
+        this.$confirm('是否下发此批次, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.axios.post('/api/PlanManagerRealse',this.qs.stringify(params)).then((res) => {
+           if(res.data.code==='200'){
+             this.$message({
+               type:'success',
+               message:'执行成功'
+             })
+            this.getSelectedEq()
+            this.getYxfBatch()
+           }
+         })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      sonNextStep(){
+        this.$emit('sonNext')
+      },
+      sonLastStep(){
+        this.$emit('sonLast')
+      },
       refreshData(){ // 刷新数据
         this.getSelectedEq()
         this.getYxfBatch()

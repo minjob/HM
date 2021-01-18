@@ -100,7 +100,7 @@
     background: #fff;
     clear: both;
     overflow: hidden;
-    z-index: 1;
+    z-index: 4;
   }
   /* 公用组件样式 */
   .platformContainer{
@@ -114,27 +114,27 @@
     clear: both;
     overflow: hidden;
   }
-  .platformTitle{
-    display: inline-block;
-    padding: 10px 15px;
-    margin-top: -15px;
-    margin-left: -15px;
-    margin-bottom: 10px;
-    border-right: 3px solid #f2f2f2;
-    border-bottom: 3px solid #f2f2f2;
-    clear: both;
-    overflow: hidden;
-  }
   .cardContainer{
     width: 100%;
     background: #ffffff;
     color: #000;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     box-shadow:0px 0px 6px rgba(0,0,0,0.16);
     padding: 15px;
     margin-bottom: 15px;
     clear: both;
     overflow: hidden;
+  }
+  .cardContainerHead{
+    width: 100%;
+    background: #ffffff;
+    color: #000;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    box-shadow:0px 0px 6px rgba(0,0,0,0.16);
+    padding: 10px 15px;
+    margin-bottom: 4px;
   }
   .colItemContainer{
     width: 100%;
@@ -179,20 +179,11 @@
   .el-table__body tr.current-row>td{
     background-color: #b6d9ff;
   }
-  /* 批记录表格 */
-  .elementTable tr td.isInput{
-    background:#f5debd;
-    max-width: 200px;
-  }
-  .elementTable tr td.collect{
-    background:#ddd;
-    max-width: 200px;
-  }
 }
 /* 绿色主题 */
 .green-theme{
   .body-container{
-    background: #F6F9F9;
+    background: #67bea4;
   }
   /* 主页头部 */
   .el-header{
@@ -265,7 +256,6 @@
   }
   .left-aside{
     background-color: #0A9168; /* 不支持线性的时候显示 */
-    background-image: linear-gradient(#0A9168 , #b1e2d3);
     box-shadow:3px 0px 3px rgba(0,0,0,0.08);
   }
   .aside-foot{
@@ -292,7 +282,7 @@
     background-image: linear-gradient(to right, #0A9168 , #b1e2d3);
     clear: both;
     overflow: hidden;
-    z-index: 1;
+    z-index: 4;
   }
   /* 公用组件样式 */
   .platformContainer{
@@ -306,27 +296,27 @@
     clear: both;
     overflow: hidden;
   }
-  .platformTitle{
-    display: inline-block;
-    padding: 10px 15px;
-    margin-top: -15px;
-    margin-left: -15px;
-    margin-bottom: 10px;
-    border-right: 3px solid #f2f2f2;
-    border-bottom: 3px solid #f2f2f2;
-    clear: both;
-    overflow: hidden;
-  }
   .cardContainer{
     width: 100%;
     background: #ffffff;
     color: #000;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     box-shadow:0px 0px 6px rgba(0,0,0,0.16);
     padding: 15px;
     margin-bottom: 15px;
     clear: both;
     overflow: hidden;
+  }
+  .cardContainerHead{
+    width: 100%;
+    background: #ffffff;
+    color: #000;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    box-shadow:0px 0px 6px rgba(0,0,0,0.16);
+    padding: 10px 15px;
+    margin-bottom: 4px;
   }
   .colItemContainer{
     width: 100%;
@@ -370,15 +360,6 @@
   /* el表格 */
   .el-table__body tr.current-row>td{
     background-color: #b6d9ff;
-  }
-  /* 批记录表格 */
-  .elementTable tr td.isInput{
-    background:#f5debd;
-    max-width: 200px;
-  }
-  .elementTable tr td.collect{
-    background:#ddd;
-    max-width: 200px;
   }
 }
 
@@ -487,7 +468,7 @@
     background: #1E222B;
     clear: both;
     overflow: hidden;
-    z-index: 1;
+    z-index: 4;
   }
   /* 表格 */
   .el-table{
@@ -586,6 +567,12 @@
   .el-timeline-item__timestamp{
     color: #168DD7;
   }
+  /* 卡片 */
+  .el-card{
+    background-color: #3D4048;
+    color: #fff;
+    border: 1px solid #3D4048;
+  }
   /* 公用组件样式 */
   .platformContainer{
     width: 100%;
@@ -597,26 +584,25 @@
     clear: both;
     overflow: hidden;
   }
-  .platformTitle{
-    display: inline-block;
-    padding: 10px 15px;
-    margin-top: -15px;
-    margin-left: -15px;
-    margin-bottom: 10px;
-    border-right: 3px solid #1E222B;
-    border-bottom: 3px solid #1E222B;
-    clear: both;
-    overflow: hidden;
-  }
   .cardContainer{
     width: 100%;
     background: #3D4048;
     color: #ffffff;
-    border-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     padding: 15px;
     margin-bottom: 15px;
     clear: both;
     overflow: hidden;
+  }
+  .cardContainerHead{
+    width: 100%;
+    background: #3D4048;
+    color: #ffffff;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 4px;
   }
   .colItemContainer{
     width: 100%;
@@ -673,15 +659,6 @@
   .el-step__title.is-process{
     color:#fff;
   }
-  /* 批记录表格 */
-  .elementTable tr td.isInput{
-    background:#176284;
-    max-width: 200px;
-  }
-  .elementTable tr td.collect{
-    background:#5a5757;
-    max-width: 200px;
-  }
 }
 /* 主题切换 */
 .themeItem{
@@ -693,6 +670,19 @@
 }
 .themeItem.active{
   border: 2px solid #168DD7;
+}
+/* 批记录表格 */
+.elementTable tr td.isInput{
+  box-shadow: inset 0px 1px 6px 0px #71e8f7;
+  max-width: 200px;
+}
+.elementTable tr td.collect{
+  box-shadow: inset 0px 1px 6px 0px #5a5757;
+  max-width: 200px;
+}
+.elementTable tr td.operator,.reviewingOfficer,.QAConform{
+  box-shadow: inset 0px 1px 6px 0px #0a8cf3;
+  max-width: 200px;
 }
 /* 分页位置 */
 .paginationClass{

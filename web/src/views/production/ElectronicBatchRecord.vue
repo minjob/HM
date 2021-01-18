@@ -79,8 +79,10 @@
         currentBatch:true,//控制显示表格 boolen
         filebyte:"",
         BrandCode:"",
+        BrandName:"",
         PUCode:"",
         BatchID:"",
+        ZYPlanItem:{}
       }
     },
     created(){
@@ -154,7 +156,10 @@
         })
       },
       ClickPU(item){ //点击工艺展示电子批记录
+        let that = this
+        this.ZYPlanItem = item
         this.BrandCode = item.BrandCode
+        this.BrandName = item.BrandName
         this.PUCode = item.PUCode
         this.BatchID = item.BatchID
         var params={
@@ -170,12 +175,24 @@
               this.$nextTick(function () {
                 $(".elementTable").find("td").each(function(){
                   if($(this).hasClass("isInput")){
-                    if($(this).children().length > 0){
+                    if($(this).children("p").length == 1){ //判断单元格有几个p标签
                       $(this).find("p").attr("contenteditable","true")
-                    }else{
+                    }else if($(this).children("p").length == 0){
                       $(this).append("<p></p>")
                       $(this).find("p").attr("contenteditable","true")
+                    }else{ //多个p标签的值合成一个
+                      var html = ""
+                      $(this).find("p").each(function(){
+                       html += $(this).html()
+                      })
+                      $(this).html("")
+                      $(this).append("<p></p>")
+                      $(this).find("p").attr("contenteditable","true").html(html)
                     }
+                  }else if($(this).attr("data-field") === "ProductName"){
+                    $(this).html(that.BrandName)
+                  }else if($(this).attr("data-field") === "BatchNo"){
+                    $(this).html(that.BatchID)
                   }
                 })
                 $(".elementTable").find("tbody").css("display","inline-table")
@@ -193,6 +210,7 @@
       },
       // 获取录入保存的数据
       getBatchModelField(){
+        let that = this
         var params = {
           BrandCode:this.BrandCode,
           PUCode:this.PUCode,
@@ -203,14 +221,105 @@
         }).then(res =>{
           if(res.data.code === "200"){
             this.$nextTick(function () {
-              for(let key  in res.data.data){
-                $(".elementTable").find(".isInput").each(function(){
+              for(let key in res.data.data){
+                $(".elementTable").find("td.isInput").each(function(){
                   if($(this).attr("data-field") === key){
-                    $(this).find("p").html(res.data.data[key])
+                      $(this).find("p").html(res.data.data[key])
+                  }
+                })
+                $(".elementTable").find("td.operator").each(function(){
+                  if($(this).attr("data-field") === key){
+                    if($(this).children("p").length == 0){
+                      $(this).append("<p></p>")
+                      $(this).find("p").html(res.data.data[key])
+                    }else{
+                      $(this).find("p").html(res.data.data[key])
+                    }
+                  }
+                })
+                $(".elementTable").find("td.reviewingOfficer").each(function(){
+                  if($(this).attr("data-field") === key){
+                    if($(this).children("p").length == 0){
+                      $(this).append("<p></p>")
+                      $(this).find("p").html(res.data.data[key])
+                    }else{
+                      $(this).find("p").html(res.data.data[key])
+                    }
+                  }
+                })
+                $(".elementTable").find("td.QAConform").each(function(){
+                  if($(this).attr("data-field") === key){
+                    if($(this).children("p").length == 0){
+                      $(this).append("<p></p>")
+                      $(this).find("p").html(res.data.data[key])
+                    }else{
+                      $(this).find("p").html(res.data.data[key])
+                    }
                   }
                 })
               }
-
+              $(".elementTable").find("td input[type=checkbox]").each(function(){ //为复选框添加勾选
+                if($(this).val() === "0"){
+                  $(this).prop("checked",false)
+                }else if($(this).val() === "1"){
+                  $(this).prop("checked",true)
+                }
+              })
+              $(".elementTable").find("td input[type=checkbox]").on("click",function(){ //为复选框添加点击事件
+                if($(this).val() === "0"){
+                  $(this).val("1")
+                }else if($(this).val() === "1"){
+                  $(this).val("0")
+                }
+              })
+              $(".elementTable").find("td.operator,.reviewingOfficer,.QAConform").on("click",function(){ //点击确认
+                that.$confirm('您是否要确认'+ $(this).attr("title") +'?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                  var params = {
+                    BatchID:that.BatchID,
+                    BrandCode:that.BrandCode,
+                    PUCode:that.PUCode,
+                    key:$(this).attr("data-field")
+                  }
+                  const loading = that.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                  });
+                  that.axios.post("/api/batchconfirm",that.qs.stringify(params)).then(res =>{
+                    loading.close();
+                    if(res.data.code === "200"){
+                      if($(this).children("p").length == 0){
+                        $(this).append("<p></p>")
+                        $(this).find("p").html(res.data.data)
+                      }else{
+                        $(this).find("p").append(" "+res.data.data)
+                      }
+                      that.$message({
+                        type: 'success',
+                        message: $(this).attr("title")+"确认成功"
+                      });
+                    }else{
+                      that.$message({
+                        type: 'info',
+                        message: res.data.message
+                      });
+                    }
+                  },res =>{
+                    loading.close();
+                    console.log("请求错误")
+                  })
+                }).catch(() => {
+                  that.$message({
+                    type: 'info',
+                    message: '已取消确认'
+                  });
+                });
+              })
             })
           }else{
             this.$message({
@@ -239,7 +348,14 @@
             $(".elementTable").find(".isInput").each(function(){
               params[$(this).attr("data-field")] = $(this).find("p").html()
             })
+            const loading = this.$loading({
+              lock: true,
+              text: 'Loading',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            });
             that.axios.post("/api/allUnitDataMutual",that.qs.stringify(params)).then(res =>{
+              loading.close();
               if(res.data.code === "200"){
                 that.$message({
                   type: 'success',
@@ -252,6 +368,7 @@
                 });
               }
             },res =>{
+              loading.close();
               console.log("请求错误")
             })
           })
