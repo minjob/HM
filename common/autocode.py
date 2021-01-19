@@ -6,6 +6,8 @@ from flask import Flask
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, create_engine
 from common.MESLogger import MESLogger
+from common.system import CreateTableSet, FieldSet
+
 metadata = MetaData()
 import json
 import datetime
@@ -73,7 +75,6 @@ class MakeModel:
         notes += 'from sqlalchemy import create_engine, Column,ForeignKey, Table, DateTime, Integer, String\n'
         notes += 'from sqlalchemy import Column, DateTime, Float, Integer, String, Unicode,BigInteger\n'
         notes += 'from sqlalchemy.dialects.mssql.base import BIT\n'
-        notes += 'from equipment_backend.database.connect_db import CONNECT_DATABASE\n'
         notes += 'from datetime import datetime\n'
         notes += 'from flask_login import LoginManager\n'
         notes += 'from werkzeug.security import generate_password_hash, check_password_hash\n'
@@ -89,22 +90,22 @@ class MakeModel:
 
     # 创建对象的基类
     def makeBaseModel(self):
-        notes = ''
-        sqlstring = "CONNECT_DATABASE"
-        notes = '\n'
-        notes += '# 创建对象的基类\n'
-        notes += "engine = create_engine(" + "\n\t\t"
-        notes += "{0}, deprecate_large_types=True,"""+"\n\t\t"
-        notes += "max_overflow=0,  # 超过连接池大小外最多创建的连接\n\t\t"
-        notes += "pool_size=100,  # 连接池大小\n\t\t"
-        notes += "pool_timeout=50,  # 池中没有线程最多等待的时间，否则报错\n\t\t"
-        notes += "pool_recycle=-1  # 多久之后对线程池中的线程进行一次连接的回收（重置）\n\t\t"
-        notes += " # echo = True   #输出SQL\n"
-        notes += ")\n"
-        notes += "SessionFactory = sessionmaker(bind=engine)\n"
-        notes += "session = SessionFactory()\n"
-        notes += 'Base = declarative_base(engine)\n'
-        notes = notes.replace("{0}",sqlstring)
+        notes = 'from common.Global import db_session, engine, Base'
+        # sqlstring = "CONNECT_DATABASE"
+        # notes = '\n'
+        # notes += '# 创建对象的基类\n'
+        # notes += "engine = create_engine(" + "\n\t\t"
+        # notes += "{0}, deprecate_large_types=True,"""+"\n\t\t"
+        # notes += "max_overflow=0,  # 超过连接池大小外最多创建的连接\n\t\t"
+        # notes += "pool_size=100,  # 连接池大小\n\t\t"
+        # notes += "pool_timeout=50,  # 池中没有线程最多等待的时间，否则报错\n\t\t"
+        # notes += "pool_recycle=-1  # 多久之后对线程池中的线程进行一次连接的回收（重置）\n\t\t"
+        # notes += " # echo = True   #输出SQL\n"
+        # notes += ")\n"
+        # notes += "SessionFactory = sessionmaker(bind=engine)\n"
+        # notes += "session = SessionFactory()\n"
+        # notes += 'Base = declarative_base(engine)\n'
+        # notes = notes.replace("{0}",sqlstring)
         return notes
 
     def makeEndImplement(self):
@@ -221,7 +222,7 @@ class MakeModel:
         f.close()
 
     def ModifyModel(self,AFilename,ATableName):
-        currentPath = os.path.abspath('../equipment_backend/tools')
+        currentPath = os.path.abspath('.')
         model_path = PATH(currentPath + r'\\' + AFilename)
         i = 0
         tmp = ""
@@ -333,7 +334,7 @@ class MakeModel:
                 tpl += self.makeEndImplement()
                 self.makeModelPythonFile(pythonFileName, tpl)
 
-    def makeModel(self, data, AModifyString, tableName):
+    def makeModel(self, AModifyString, tableName):
         try:
             import os, configparser
             BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -345,12 +346,12 @@ class MakeModel:
             # tpl += self.makeBaseModel()
             tpl += self.makeORMFrontModel(tableName)
             tpl += self.makeGeneralKeyModel("ID", "ID", "Integer", "True", "True", "False", "")
-            str = data[1:-1].split(";")
-            for i in str:
-                i = json.loads(i)
-                tpl += self.makeGeneralKeyModel(i.get("comment"), i.get("FieldName"), i.get("type"),
-                                                i.get("primarykey"), i.get("autoincrement"), i.get("nullable"), i.get("length"))
-
+            ocs = db_session.query(FieldSet).filter(FieldSet.TableName == tableName).all()
+            for i in ocs:
+                tpl += self.makeGeneralKeyModel(i.comment, i.FieldName, i.type,
+                                                i.primarykey, i.autoincrement, i.nullable, i.length)
+                i.Status = "使用中"
+                db_session.commit()
             tpl += '\n'
             tpl += '#' + tableName + '_END:\n'
             if len(tpl) > 10:
@@ -426,10 +427,10 @@ def make_model_main(data):
         os.rename(backFileName,newFileName)
         model = MakeModel()
         notes = ""
-        tableName = data.get("tableName")
-        datastr = data.get("Field")
+        ct = db_session.query(CreateTableSet).filter(CreateTableSet.ID == data.get("ID")).first()
+        tableName = ct.TableName
         notes = model.ModifyModel("make_model_test.txt",tableName)
-        model.makeModel(datastr, notes, tableName)
+        model.makeModel(notes, tableName)
         os.system("python "+oldFileName)
         os.remove(newFileName)
         return 'OK'
