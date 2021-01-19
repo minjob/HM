@@ -163,6 +163,9 @@ class FieldSet(Base):
     # 是否为空（默认True）:
     nullable = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
 
+    # 状态:
+    Status = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
+
     # # isedit是否做添加修改操作（默认否）:
     # Isedit = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
 
