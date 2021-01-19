@@ -17,14 +17,7 @@ engine = create_engine(CONNECT_DATABASE)
 Session = sessionmaker(bind=engine)
 db_session = Session()
 Base = declarative_base(engine)
-
 systemlog = Blueprint('systemlog', __name__, template_folder='templates')
-
-# 系统日志
-@systemlog.route('/syslogs')
-def syslogs():
-    return render_template('./syslogs.html')
-
 
 # 日志查询
 @systemlog.route('/syslogs/findByDate')

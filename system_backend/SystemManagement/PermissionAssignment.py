@@ -161,13 +161,6 @@ def SelectMenus():
                 oclass = db_session.query(ModulMenus).filter(
                     ModulMenus.ResourceMenuName.like("%" + i.MenuName + "%")).first()
                 dic.append(oclass)
-                # if MenuType == "资源级":
-                #     oclass = db_session.query(ResourceMenus).filter(ResourceMenus.ModulMenuName.like("%"+i.MenuName+"%")).first()
-                #     dic.append(oclass)
-                # else:
-                #     oclass = db_session.query(ModulMenus).filter(
-                #         ModulMenus.ResourceMenuName.like("%" + i.MenuName + "%")).first()
-                #     dic.append(oclass)
             return {"code": "200", "message": "请求成功", "data": {"total": len(dic), "rows": dic}}
         except Exception as e:
             print(e)

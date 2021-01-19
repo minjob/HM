@@ -10,7 +10,6 @@ from schedul_backend.interface_manage import interface_manage
 from system_backend.SystemManagement import auth_lib, user_management, Role_management, system_manage, \
     PermissionAssignment, account_auth
 from system_backend.SystemManagement.account_auth import login_auth
-from system_backend.SystemManagement.organization_model import organiza
 from system_backend.SystemManagement.system_manage import selectRedisBykey, addUpdateRedisBykey, \
     deleteRedisBykey
 from system_backend.SystemManagement.user_management import user_manager
@@ -33,8 +32,6 @@ app.register_blueprint(Role_management.role_management)
 app.register_blueprint(system_manage.system_set)
 # 权限分配
 app.register_blueprint(PermissionAssignment.permission_distribution)
-# 组织机构
-app.register_blueprint(organiza)
 # 过程连续数据
 # app.register_blueprint(ProcessContinuousData.continuous_data)
 # 组织架构

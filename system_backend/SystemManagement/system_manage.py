@@ -25,20 +25,11 @@ db_session = Session()
 
 from sqlalchemy import MetaData, desc
 from io import BytesIO
-
 metadata = MetaData()
 Base = automap_base()
 Base.prepare(engine, reflect=True)
-
 system_set = Blueprint('system_set', __name__, template_folder='templates')
 
-
-# 加载工作台
-@system_set.route('/home/workbench')
-def workbenck():
-    return render_template('./main/workbench.html')
-
-# 加载工作台
 @system_set.route('/system_set/make_model', methods=['POST', 'GET'])
 def make_model():
     if request.method == 'POST':
