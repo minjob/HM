@@ -81,7 +81,7 @@
             if(this.isSubLoadding == false){
               this.isSubLoadding = true
               this.axios.post('/api/account/userloginauthentication',this.qs.stringify(params)).then(res =>{
-                if(res.data == "OK"){
+                if(res.data.code === "200"){
                   this.$message({
                     showClose: true,
                     message: "登录成功",
@@ -98,11 +98,11 @@
                   }else{
                     this.clearCookie()
                   }
-                }else{
+                }else if(res.data.code === "300"){
                   this.$message({
                     showClose: true,
                     type: 'info',
-                    message: res.data
+                    message: res.data.message
                   });
                   this.isSubLoadding = false
                 }
