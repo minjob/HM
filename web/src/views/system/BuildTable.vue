@@ -7,7 +7,7 @@
       <div class="platformContainer">
         <el-col :span="4" class="marginBottom">
           <el-card class="box-card text-center">
-            <i class="el-icon-circle-plus-outline text-size-24" @click="CreateTableDialogVisible = true"></i>
+            <i class="el-icon-circle-plus-outline text-size-24" style="width: 100%;" @click="CreateTableDialogVisible = true"></i>
           </el-card>
         </el-col>
         <el-col :span="4" v-for="(item,index) in TableList" :key="index" class="marginBottom">
@@ -18,14 +18,14 @@
             <div class="scrollable">
               <p v-for="(field,fieldIndex) in item.FieldList" class="text-size-12 marginBottom-5" :key="fieldIndex">
                  {{ field.FieldName }} {{ field.TitleName }}
-                <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(item.ID)"></span>
+                <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(field.ID)"></span>
               </p>
             </div>
             <div style="line-height: 50px;border-top: 1px solid #eee;text-align: center;">
               <p>
                 <el-button size="mini" type="primary" icon="el-icon-plus" circle @click="addField(item.TableName)"></el-button>
                 <el-button size="mini" type="danger" icon="el-icon-minus" circle @click="removeTable(item.ID)"></el-button>
-                <el-button size="mini" type="success" icon="el-icon-check" circle></el-button>
+                <el-button size="mini" type="success" icon="el-icon-check" circle @click="buildTable(item.ID)"></el-button>
               </p>
             </div>
           </el-card>
@@ -46,7 +46,7 @@
         </span>
       </el-dialog>
       <el-dialog title="添加字段" :visible.sync="FieldSetDialogVisible" width="40%" :close-on-click-modal="false" :append-to-body="true">
-        <el-form :model="CreateFieldListField" label-width="110px">
+        <el-form :model="CreateFieldListField" label-width="120px">
           <el-form-item label="表名">
             <el-input v-model="CreateFieldListField.TableName" :disabled="true"></el-input>
           </el-form-item>
@@ -60,7 +60,17 @@
             <el-input v-model="CreateFieldListField.length"></el-input>
           </el-form-item>
           <el-form-item label="字段类型">
-            <el-input v-model="CreateFieldListField.type"></el-input>
+            <el-select v-model="CreateFieldListField.type" placeholder="请选择">
+              <el-option label="VARCHAR" value="VARCHAR"></el-option>
+              <el-option label="DATETIME" value="DATETIME"></el-option>
+              <el-option label="INT" value="INT"></el-option>
+              <el-option label="DINT" value="DINT"></el-option>
+              <el-option label="TRUE" value="TRUE"></el-option>
+              <el-option label="FALSE" value="FALSE"></el-option>
+              <el-option label="BOOL" value="BOOL"></el-option>
+              <el-option label="FLOAT" value="FLOAT"></el-option>
+              <el-option label="REAL" value="REAL"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="字段注释">
             <el-input v-model="CreateFieldListField.comment"></el-input>
@@ -101,11 +111,11 @@
           TitleName:"",
           FieldName:"",
           length:"",
-          type:"",
+          type:"VARCHAR",
           comment:"",
-          primarykey:"",
-          autoincrement:"",
-          nullable:"",
+          primarykey:"False",
+          autoincrement:"False",
+          nullable:"True",
         },
         FieldSetDialogVisible:false,
       }
@@ -201,7 +211,7 @@
           tableName:"CreateTableSet",
           delete_data:JSON.stringify(mulId)
         }
-        this.$confirm('确定删除所选记录？', '提示', {
+        this.$confirm('确定删除所选表？', '提示', {
           distinguishCancelAndClose:true,
           type: 'warning'
         }).then(()  => {
@@ -263,11 +273,10 @@
           tableName:"FieldSet",
           delete_data:JSON.stringify(mulId)
         }
-        this.$confirm('确定删除所选记录？', '提示', {
+        this.$confirm('确定删除所选字段？', '提示', {
           distinguishCancelAndClose:true,
           type: 'warning'
         }).then(()  => {
-
           this.axios.delete("/api/CUID",{
             params: params
           }).then(res =>{
@@ -287,6 +296,36 @@
             message: '已取消删除'
           });
         });
+      },
+      buildTable(id){
+        var that = this
+        this.$confirm('确定新建此模型吗？', '提示', {
+          distinguishCancelAndClose:true,
+          type: 'warning'
+        }).then(()  => {
+          var params = {
+            ID:id
+          }
+          this.axios.post("/api/system_set/make_model",this.qs.stringify(params)).then(res => {
+            if(res.data.code === "200"){
+              this.$message({
+                type:'success',
+                message:res.data.message
+              })
+              this.getTable()
+            }else{
+              that.$message({
+                type: 'info',
+                message: res.data.message
+              });
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
       }
     }
   }
@@ -297,6 +336,6 @@
     min-height: 260px;
   }
   .box-card i{
-    line-height: 160px;
+    line-height: 200px;
   }
 </style>
