@@ -177,6 +177,7 @@
             {title:"人员管理",icon:"el-icon-user",url:"/Personnel"},
             {title:"权限维护",icon:"el-icon-lock",url:"/Permission"},
             {title:"流程管理",icon:"el-icon-share",url:"/flowGraph"},
+            {title:"可视化建表",icon:"fa fa-database",url:"/BuildTable"},
             {title:"系统日志",icon:"el-icon-notebook-1",url:"/Log"}
           ]},
         ],

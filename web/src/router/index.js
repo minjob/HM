@@ -13,6 +13,7 @@ import Personnel from '@/views/system/Personnel'
 import Permission from '@/views/system/Permission'
 import Log from '@/views/system/Log'
 import flowGraph from '@/views/system/flowGraph'
+import BuildTable from '@/views/system/BuildTable'
 
 //生产建模
 import ProductDefinition from '@/views/ProductionModel/ProductDefinition'
@@ -75,6 +76,7 @@ export default new Router({
         {path:'/Permission',name:'Permission',meta:{ title:'权限维护',type:"系统管理"},component:Permission},
         {path:'/Log',name:'Log',meta:{ title:'系统日志',type:"系统管理"},component:Log},
         {path:'/flowGraph',name:'flowGraph',meta:{ title:'流程图管理',type:"系统管理"},component:flowGraph},
+        {path:'/BuildTable',name:'BuildTable',meta:{ title:'可视化建表',type:"系统管理"},component:BuildTable},
 
         {path:'/ProductDefinition',name:'ProductDefinition',meta:{ title:'产品定义',type:"生产建模"},component:ProductDefinition},
         {path:'/ProcessSectionDefinition',name:'ProcessSectionDefinition',meta:{ title:'工艺段定义',type:"生产建模"},component:ProcessSectionDefinition},
