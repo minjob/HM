@@ -15,18 +15,12 @@ from flask_login import current_user, LoginManager
 from common.BSFramwork import AlchemyEncoder
 from common.system import Organization, Factory, DepartmentManager, Role
 from database import connect_db
-
-from database.connect_db import CONNECT_DATABASE
+from common.Global import db_session, engine, Base
 login_manager = LoginManager()
-# 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
 
 from sqlalchemy import MetaData, desc
 from io import BytesIO
 metadata = MetaData()
-Base = automap_base()
 Base.prepare(engine, reflect=True)
 system_set = Blueprint('system_set', __name__, template_folder='templates')
 

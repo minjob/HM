@@ -12,12 +12,7 @@ import datetime
 from common.system import User
 from common.MESLogger import logger
 from common.BSFramwork import AlchemyEncoder
-from database.connect_db import CONNECT_DATABASE
-login_manager = LoginManager()
-# 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
+from common.Global import db_session, engine, Base
 # flask_login的初始化
 login_manager = LoginManager()
 login_manager.db_session_protection = 'strong'
@@ -47,7 +42,7 @@ def userloginauthentication():
                 db_session.commit()
                 return {"code": "200", "message": "OK"}
             else:
-                return {"code": "200", "message": "用户名密码错误"}
+                return {"code": "300", "message": "用户名密码错误"}
     except Exception as e:
         print(e)
         db_session.rollback()

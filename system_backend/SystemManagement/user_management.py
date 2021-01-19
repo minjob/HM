@@ -1,21 +1,14 @@
 import json
-
 from flask import Blueprint, request
 from common.MESLogger import logger,insertSyslog
 from flask_login import current_user, LoginManager
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
 from common.BSFramwork import AlchemyEncoder
 from common.system import DepartmentManager, AreaMaintain, Role, RoleUser, User, ShiftsGroup, UserShiftsGroup
-from database.connect_db import CONNECT_DATABASE
+from common.Global import db_session, engine, Base
 login_manager = LoginManager()
-# 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
-Base = declarative_base(engine)
 
 user_manager = Blueprint('user_manager', __name__)
 
