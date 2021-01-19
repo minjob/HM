@@ -1122,6 +1122,7 @@
 <style scoped>
   .el-container{
     /*background: url("../assets/img/monitor_bg.jpg");*/
+    background: #272727;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     color: #ffffff;
