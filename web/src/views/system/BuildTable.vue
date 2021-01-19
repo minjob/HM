@@ -17,7 +17,7 @@
             </div>
             <div class="scrollable">
               <p v-for="(field,fieldIndex) in item.FieldList" class="text-size-12 marginBottom-5" :key="fieldIndex">
-                 {{ field.FieldName }} {{ field.TitleName }}
+                 <span :class="{'color-success':field.Status === '使用中'}"></span>{{ field.FieldName }} {{ field.TitleName }}
                 <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(field.ID)"></span>
               </p>
             </div>
@@ -76,13 +76,22 @@
             <el-input v-model="CreateFieldListField.comment"></el-input>
           </el-form-item>
           <el-form-item label="是否为主键">
-            <el-input v-model="CreateFieldListField.primarykey"></el-input>
+            <el-select v-model="CreateFieldListField.primarykey" placeholder="请选择">
+              <el-option label="True" value="True"></el-option>
+              <el-option label="False" value="False"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="是否自增">
-            <el-input v-model="CreateFieldListField.autoincrement"></el-input>
+            <el-select v-model="CreateFieldListField.autoincrement" placeholder="请选择">
+              <el-option label="True" value="True"></el-option>
+              <el-option label="False" value="False"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="是否为空">
-            <el-input v-model="CreateFieldListField.nullable"></el-input>
+            <el-select v-model="CreateFieldListField.nullable" placeholder="请选择">
+              <el-option label="True" value="True"></el-option>
+              <el-option label="False" value="False"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
