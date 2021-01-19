@@ -17,7 +17,7 @@
             </div>
             <div class="scrollable">
               <p v-for="(field,fieldIndex) in item.FieldList" class="text-size-12 marginBottom-5" :key="fieldIndex">
-                 <span :class="{'color-success':field.Status === '使用中'}"></span>{{ field.FieldName }} {{ field.TitleName }}
+                 <span :class="{'color-success':field.Status === '使用中'}">{{ field.FieldName }} {{ field.TitleName }}</span>
                 <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(field.ID)"></span>
               </p>
             </div>
