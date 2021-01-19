@@ -8,19 +8,16 @@ from sqlalchemy import create_engine
 from common.BSFramwork import AlchemyEncoder
 from suds.client import Client
 import common.Global
-from common.batch_plan_model import ZYPlan, ZYPlanWMS, StapleProducts, WMSTrayNumber, MaterialBOM, SchedulingStock, \
+from common.batch_plan_model import ZYPlan, ZYPlanWMS, StapleProducts, WMSTrayNumber, MaterialBOM, \
     WMStatusLoad, Material, PlanManager, ProcessUnit, BatchMaterialInfo, ProductRule, ZYTask
 from database.connect_db import CONNECT_DATABASE
 from common import Global
 import json
 from flask_login import current_user,LoginManager
 from common.common_cuid import logger,insertSyslog
-
 login_manager = LoginManager()
 # 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
+from common.Global import db_session, engine, Base
 
 interface_manage = Blueprint('interface_manage', __name__)
 from spyne import rpc

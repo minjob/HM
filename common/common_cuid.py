@@ -4,20 +4,14 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 from flask_login import current_user
 import re
-
 from werkzeug.security import generate_password_hash
-
 from database.connect_db import CONNECT_DATABASE
 import socket
 import datetime
 from common.system import SysLog, User, AuditTrace
 from common.MESLogger import MESLogger
 from common.BSFramwork import AlchemyEncoder
-
-engine = create_engine(CONNECT_DATABASE, deprecate_large_types=True)
-Session = sessionmaker(bind=engine)
-db_session = Session()
-
+from common.Global import db_session, engine
 from sqlalchemy import MetaData
 
 metadata = MetaData()

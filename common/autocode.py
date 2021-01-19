@@ -5,9 +5,7 @@ import xlrd
 from flask import Flask
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, create_engine
-
 from common.MESLogger import MESLogger
-
 metadata = MetaData()
 import json
 import datetime
@@ -16,10 +14,7 @@ app = Flask(__name__)
 
 logger = MESLogger('../equipment_backend/logs', 'log')
 
-from database.connect_db import CONNECT_DATABASE
-engine = create_engine(CONNECT_DATABASE, deprecate_large_types=True)
-Session = sessionmaker(bind=engine)
-db_session = Session()
+from common.Global import db_session
 
 PATH = lambda p: os.path.abspath(os.path.join(os.path.dirname(__file__), p))
 

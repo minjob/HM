@@ -1,21 +1,12 @@
 from tkinter.tix import MAX
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, ForeignKey, Column, DateTime, Integer, Unicode, Float, BigInteger
 from sqlalchemy.dialects.mssql.base import BIT
-
 from flask_login import LoginManager
 from database.connect_db import CONNECT_DATABASE
-
 login_manager = LoginManager()
-# 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
-Base = declarative_base(engine)
-
-
+from common.Global import db_session, engine, Base
 # 电子批记录
 class ElectronicBatch(Base):
     '''电子批记录'''
@@ -965,23 +956,23 @@ class WMSTrayNumber(Base):
 
 
 
-# 排产库存表
-class SchedulingStock(Base):
-    __tablename__ = "SchedulingStock"
-    # ID:
-    ID = Column(Integer, primary_key=True, autoincrement=True, nullable=True)
-    # 产品(即物料)编码
-    product_code = Column(Unicode(50), primary_key=False, autoincrement=False, nullable=True)
-    # 物料名称
-    MATName = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
-    # 仓库库存
-    StockHouse = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
-    # 安全库存
-    SafetyStock = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
-    # 创建时间
-    create_time = Column(DateTime, primary_key=False, autoincrement=False, nullable=True)
-    # 修改时间
-    update_time = Column(DateTime, primary_key=False, autoincrement=False, nullable=True)
+# # 排产库存表
+# class SchedulingStock(Base):
+#     __tablename__ = "SchedulingStock"
+#     # ID:
+#     ID = Column(Integer, primary_key=True, autoincrement=True, nullable=True)
+#     # 产品(即物料)编码
+#     product_code = Column(Unicode(50), primary_key=False, autoincrement=False, nullable=True)
+#     # 物料名称
+#     MATName = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
+#     # 仓库库存
+#     StockHouse = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
+#     # 安全库存
+#     SafetyStock = Column(Unicode(32), primary_key=False, autoincrement=False, nullable=True)
+#     # 创建时间
+#     create_time = Column(DateTime, primary_key=False, autoincrement=False, nullable=True)
+#     # 修改时间
+#     update_time = Column(DateTime, primary_key=False, autoincrement=False, nullable=True)
 
 # 与WMS状态同步表
 class WMStatusLoad(Base):

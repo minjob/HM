@@ -1,4 +1,12 @@
 from enum import Enum, IntEnum, unique
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from database.connect_db import CONNECT_DATABASE
+engine = create_engine(CONNECT_DATABASE, deprecate_large_types=True)
+Session = sessionmaker(bind=engine)
+db_session = Session()
+Base = declarative_base(engine)
 
 #连接WMS接口URL
 WMSurl = "http://192.168.20.68:8090/"#192.168.20.68 192.168.20.55

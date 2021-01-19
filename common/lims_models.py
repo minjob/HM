@@ -1,17 +1,12 @@
 from datetime import datetime
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, Column, DateTime, Integer, Unicode
 from flask_login import LoginManager
 from database.connect_db import CONNECT_DATABASE
-
 login_manager = LoginManager()
 # 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
-Base = declarative_base(engine)
+from common.Global import db_session, engine, Base
 
 
 class QualityStandard(Base):

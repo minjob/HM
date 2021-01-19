@@ -16,7 +16,6 @@ import re
 from sqlalchemy import create_engine, Column, ForeignKey, Table, Integer, String, and_, or_, desc,extract
 from io import StringIO
 import calendar
-
 import schedul_backend
 from common import Global
 from common.BSFramwork import AlchemyEncoder
@@ -27,20 +26,15 @@ import openpyxl
 import suds
 from suds.client import Client
 from datetime import timedelta
-
 from common.batch_plan_model import ProductUnit, ProductRule, PlanManager, ZYPlan, ZYTask, TaskNoGenerator, \
     ZYPlanWMS, Material, MaterialBOM, ProductEquipment, ProcessUnit, ProductLine
 from common.schedul_model import Scheduling, plantCalendarScheduling, SchedulingStandard, \
     scheduledate, product_plan, SchedulingStock, EquipmentBatchRunTime
 from common.system import Shifts
-from database.connect_db import CONNECT_DATABASE
 from enum import Enum, IntEnum, unique
-
 login_manager = LoginManager()
 # 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
+from common.Global import db_session, engine, Base
 
 erp_schedul = Blueprint('erp_schedul', __name__)
 
