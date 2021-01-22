@@ -17,13 +17,8 @@ from common.batch_plan_model import ProductUnit, PlanManager, ZYPlan, ZYTask, Ta
     ProcessUnit, SchedulePlan, \
     BatchModel, BatchUseModel, BatchMaterialInfo, EletronicBatchDataStore, ProductRule
 from common.schedul_model import EquipmentBatchRunTime
-from database.connect_db import CONNECT_DATABASE
-
+from common.Global import db_session, engine, Base
 login_manager = LoginManager()
-# 创建对象的基类
-engine = create_engine(CONNECT_DATABASE)
-Session = sessionmaker(bind=engine)
-db_session = Session()
 
 batch_plan = Blueprint('batch_plan', __name__)
 

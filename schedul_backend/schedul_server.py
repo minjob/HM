@@ -7,7 +7,6 @@ import datetime
 from system_backend.SystemManagement import auth_lib, user_management, Role_management, system_manage, \
     PermissionAssignment, account_auth
 from system_backend.SystemManagement.account_auth import login_auth
-from system_backend.SystemManagement.organization_model import organiza
 from schedul_backend.ERP_Schedul import erp_schedul
 
 app = Flask(__name__)

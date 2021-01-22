@@ -20,7 +20,9 @@ login_manager.login_view = 'login_auth.login'
 
 login_auth = Blueprint('login_auth', __name__, template_folder='templates')
 
-
+@login_manager.user_loader
+def load_user(user_id):
+    return db_session.query(User).filter_by(ID=int(user_id)).first()
 @login_auth.route('/account/userloginauthentication', methods=['GET', 'POST'])
 def userloginauthentication():
     '''
@@ -40,9 +42,9 @@ def userloginauthentication():
                 user.session_id = str(time.time())
                 user.LastLoginTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 db_session.commit()
-                return {"code": "200", "message": "OK"}
+                return json.dumps({"code": "200", "message": "OK"})
             else:
-                return {"code": "300", "message": "用户名密码错误"}
+                return json.dumps({"code": "300", "message": "用户名密码错误"})
     except Exception as e:
         print(e)
         db_session.rollback()
