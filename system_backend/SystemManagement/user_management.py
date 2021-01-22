@@ -196,7 +196,7 @@ def saveuserusershiftsgroup():
                     rp.ShiftsGroupName = shiftsgroupcalss.ShiftsGroupName
                     db_session.add(rp)
                     db_session.commit()
-            return json.dumps("OK", cls=AlchemyEncoder, ensure_ascii=False)
+            return json.dumps({"code": "200", "message": "请求成功"}, cls=AlchemyEncoder, ensure_ascii=False)
         except Exception as e:
             db_session.rollback()
             print(e)
