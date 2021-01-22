@@ -433,7 +433,7 @@ def make_model_main(data):
         model.makeModel(notes, tableName)
         os.system("python "+oldFileName)
         os.remove(newFileName)
-        return 'OK'
+        return json.dumps({"code": "200", "message": "请求成功"})
     except Exception as e:
         print(e)
         os.remove(newFileName)
