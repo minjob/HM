@@ -16,10 +16,25 @@
               <p>{{ item.TableName }}-{{ item.TableDescrip }}</p>
             </div>
             <div class="scrollable">
-              <p v-for="(field,fieldIndex) in item.FieldList" class="text-size-12 marginBottom-5" :key="fieldIndex">
-                 <span :class="{'color-success':field.Status === '使用中'}">{{ field.FieldName }} {{ field.TitleName }}</span>
-                <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(field.ID)"></span>
-              </p>
+              <div v-for="(field,fieldIndex) in item.FieldList" :key="fieldIndex">
+                <el-tooltip effect="light" placement="top">
+                  <p slot="content">
+                    字段名称:{{ field.TitleName }}<br>
+                    字段:{{ field.FieldName }}<br>
+                    VARCHAR长度:{{ field.length }}<br>
+                    字段类型:{{ field.type }}<br>
+                    字段注释:{{ field.comment }}<br>
+                    是否为主键:{{ field.primarykey }}<br>
+                    是否自增:{{ field.autoincrement }}<br>
+                    是否为空:{{ field.nullable }}<br>
+                    状态:{{ field.Status }}
+                  </p>
+                  <p class="text-size-12 marginBottom-5">
+                    <span :class="{'color-success':field.Status === '使用中'}">{{ field.TitleName }} {{ field.FieldName }}</span>
+                    <span class="el-icon-remove-outline floatRight cursor-pointer color-red" @click="removeField(field.ID)"></span>
+                  </p>
+                </el-tooltip>
+              </div>
             </div>
             <div style="line-height: 50px;border-top: 1px solid #eee;text-align: center;">
               <p>
