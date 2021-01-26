@@ -3,7 +3,13 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from database.connect_db import CONNECT_DATABASE
-engine = create_engine(CONNECT_DATABASE, deprecate_large_types=True)
+engine = create_engine(CONNECT_DATABASE, max_overflow=0,  # 超过连接池大小外最多创建的连接
+                       pool_size=5,  # 连接池大小
+                       pool_timeout=30,  # 池中没有线程最多等待的时间，否则报错
+                       pool_recycle=-1,  # 多久之后对线程池中的线程进行一次连接的回收（重置）
+                       echo=True
+                       )
+conn = engine.connect()
 Session = sessionmaker(bind=engine)
 db_session = Session()
 Base = declarative_base(engine)
