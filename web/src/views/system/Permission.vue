@@ -1,9 +1,6 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">权限维护</span>
-      </div>
       <div class="platformContainer">
         <tableView class="" :tableData="PermissionTableData" @getTableData="getPermissionTable"></tableView>
       </div>

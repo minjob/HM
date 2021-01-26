@@ -1,9 +1,6 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">可视化流程管理</span>
-      </div>
       <el-row :gutter="20">
         <el-col :span="24">
           <div class="cardContainer">

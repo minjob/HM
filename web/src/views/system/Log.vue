@@ -1,9 +1,6 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">系统日志</span>
-      </div>
       <div class="platformContainer">
         <el-form :inline="true" :model="formParameters">
           <el-form-item label="选择查询时间">

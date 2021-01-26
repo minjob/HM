@@ -1,9 +1,6 @@
 <template>
   <el-row :gutter="15">
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">可视化建表</span>
-      </div>
       <div class="platformContainer">
         <el-col :span="4" class="marginBottom">
           <el-card class="box-card text-center">

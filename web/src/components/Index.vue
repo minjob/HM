@@ -80,26 +80,33 @@
         </el-row>
       </el-aside>
       <!-- 页面主体 -->
-      <el-main style="clear: both;">
-        <transition name="move" mode="out-in">
-         <!--渲染子页面-->
-          <router-view :key="$route.fullPath"></router-view>
-        </transition>
-        <el-collapse-transition>
-          <div v-show="showSystemNav" class="downSystemNav">
-            <el-row :gutter="30">
-              <el-col :span="24">
-                <el-col :span="6" v-for="(item,index) in systemOptions" :key="index">
-                  <div class="platformContainer cursor-pointer" style="text-align: center;" @click="selectSystem(index,item.label)">
-                    <p class="marginBottom text-size-48" v-bind:class="{'color-lightgreen':index===systemActive}"><i :class="item.icon"></i></p>
-                    <p class="text-size-16" v-bind:class="{'color-lightgreen':index===systemActive}">{{ item.label }}</p>
-                  </div>
+      <el-container>
+        <el-header style="height: 40px;padding-top:10px;">
+          <el-breadcrumb separator="/" style="line-height: 40px;">
+            <el-breadcrumb-item v-for="(item,index) in breadList" :key="index" :to="{ path: item.path }">{{ item.meta.title }}</el-breadcrumb-item>
+          </el-breadcrumb>
+        </el-header>
+        <el-main style="clear: both;">
+          <transition name="move" mode="out-in">
+           <!--渲染子页面-->
+            <router-view :key="$route.fullPath"></router-view>
+          </transition>
+          <el-collapse-transition>
+            <div v-show="showSystemNav" class="downSystemNav">
+              <el-row :gutter="30">
+                <el-col :span="24">
+                  <el-col :span="6" v-for="(item,index) in systemOptions" :key="index">
+                    <div class="platformContainer cursor-pointer" style="text-align: center;" @click="selectSystem(index,item.label)">
+                      <p class="marginBottom text-size-48" v-bind:class="{'color-lightgreen':index===systemActive}"><i :class="item.icon"></i></p>
+                      <p class="text-size-16" v-bind:class="{'color-lightgreen':index===systemActive}">{{ item.label }}</p>
+                    </div>
+                  </el-col>
                 </el-col>
-              </el-col>
-            </el-row>
-          </div>
-        </el-collapse-transition>
-      </el-main>
+              </el-row>
+            </div>
+          </el-collapse-transition>
+        </el-main>
+      </el-container>
     </el-container>
   </el-container>
 </template>
@@ -194,6 +201,7 @@
           {color:"#0A9168",value:"2"},
         ],
         showSystemNav:false,
+        breadList:[],
       }
     },
     mounted(){
@@ -216,6 +224,7 @@
       }else{
         this.$router.push("/login");
       }
+      this.getBreadcrumb();
       if(this.$route.path === "/home"){ //判断当前路由 设置当前路由对应的菜单
         this.getMainMenu(this.systemOptions[0].mainMenu)
         this.getsystemActive(0)
@@ -235,6 +244,7 @@
       $route:{
         handler(val,oldval){
           this.defaultActiveUrl = val.path
+          this.getBreadcrumb();
         },
         deep: true,
       }
@@ -315,6 +325,13 @@
             }
           }
         })
+      },
+      getBreadcrumb(){
+        if(this.$route.name != "home") {
+          this.breadList = [{ path: "/home", meta: { title: "首页" } }].concat(this.$route.matched);
+        }else{
+          this.breadList = [{ path: "/home",name:"home", meta: { title: "首页" } }]
+        }
       },
     }
   }

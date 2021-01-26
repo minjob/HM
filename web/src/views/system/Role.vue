@@ -1,9 +1,6 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">角色管理</span>
-      </div>
       <div class="platformContainer">
         <tableView class="" :tableData="TableData" @getTableData="getRoleTable" @privileges="privileges"></tableView>
       </div>
@@ -117,7 +114,7 @@
           permissionIDs:JSON.stringify(selectPermissionArr)
         }
         this.axios.post("/api/permission/saverolepermission",this.qs.stringify(params)).then(res =>{
-          if(res.data === "OK"){
+          if(res.data.code === "200"){
             this.$message({
               type: 'success',
               message: '分配成功'

@@ -1,9 +1,6 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <div class="page-title">
-        <span style="margin-left: 10px;" class="text-size-normol">班组管理</span>
-      </div>
       <div class="platformContainer">
         <tableView class="" :tableData="TableData" @getTableData="getRoleTable"></tableView>
       </div>

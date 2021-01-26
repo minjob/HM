@@ -2,11 +2,6 @@
   <el-row>
     <el-col :span="24">
       <el-col :span="24">
-        <div class="page-title">
-          <span style="margin-left: 10px;" class="text-size-normol">人员管理</span>
-        </div>
-      </el-col>
-      <el-col :span="24">
         <div class="platformContainer">
           <tableView class="" :tableData="TableData" @getTableData="getTableData" @privileges="privileges" @teamGroup="teamGroup"></tableView>
         </div>
@@ -143,7 +138,7 @@
           RoleIDs:JSON.stringify(selectPermissionArr)
         }
         this.axios.post("/api/role_management/saveroleuser",this.qs.stringify(params)).then(res =>{
-          if(res.data === "OK"){
+          if(res.data.code === "200"){
             this.$message({
               type: 'success',
               message: '分配成功'
@@ -196,7 +191,7 @@
           shiftsgroupIDs:JSON.stringify(selectPermissionArr)
         }
         this.axios.post("/api/saveuserusershiftsgroup",this.qs.stringify(params)).then(res =>{
-          if(res.data === "OK"){
+          if(res.data.code === "200"){
             this.$message({
               type: 'success',
               message: '分配成功'

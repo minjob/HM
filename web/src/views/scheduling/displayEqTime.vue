@@ -1,6 +1,5 @@
 <template>
   <el-row>
-    <el-col :span='24' class="platformContainer">批次设备运行统计</el-col>
     <el-col :span='24' class="platformContainer">
       <div>
           <el-tag class="marginBottom marginRight cursor-pointer" v-bind:effect="''===PUCode?'dark':'plain'" @click="getTask('')">全部</el-tag>
